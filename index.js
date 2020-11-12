@@ -1,4 +1,6 @@
-// Setting up environment variables
+// Setting up environment variables (local pc user variables, secure)
+// eviroments: local, deploy(test), production
+require('dotenv').config();
 
 
 // Our server setup
@@ -8,9 +10,25 @@ const cors = require('cors');
 app.use(cors());
 
 // Connecting Mongo and setting up Mongoose
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DB_URI, {
+  auth: {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS
+  },
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+})
+.catch(error => console.error(`MONGO ERROR: ${error}`));
 
 
-// Implementing Body Parser
+
+// Implementing Body Parser --neded to parse 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // registering the routes
